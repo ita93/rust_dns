@@ -117,4 +117,36 @@ impl BytePacketBuffer {
 
         Ok(())
     }
+
+    //Write [u8] val to buffer at current position.
+    fn write(&mut self, val: u8) -> Result<()>{
+        if self.pos >= 512 {
+            return Err(Error::new(ErrorKind::InvalidInput, "End of buffer"));
+        }
+
+        self.buf[self.pos] = val;
+        self.pos += 1;
+        Ok(())
+    }
+
+    fn write_u8(&mut self, val: u8) -> Result<()>{
+        try!(self.write(val));
+        Ok(())
+    }
+    
+    fn write_u16(&mut self, val: u16) -> Result<()>{
+        try!(self.write((val>>8) as u8));
+        try!(self.write((val & 0xFF) as u8));
+
+        Ok(())
+    }
+
+    fn write_u32(&mut self, val: u16) -> Result<()> {
+        try!(self.write(((val >> 24) & 0xFF) as u8));
+        try!(self.write(((val >> 16) & 0xFF) as u8));
+        try!(self.write(((val >> 8) & 0xFF) as u8));
+        try!(self.write(((val >> 0) & 0xFF) as u8));
+
+        Ok(())
+    }
 }
