@@ -168,4 +168,16 @@ impl BytePacketBuffer {
         try!(self.write_u8(0));
         Ok(())
     }
+
+    pub fn set(&mut self, pos: usize, val: u8) -> Result<()> {
+        self.buf[pos] = val;
+        Ok(())
+    }
+
+    pub fn set_u16(&mut self, pos: usize, val: u16) -> Result<()> {
+        try!(self.set(pos, (val >> 8) as u8));
+        try!(self.set(pos+1, (val & 0xFF) as u8));
+
+        Ok(())
+    }
 }
